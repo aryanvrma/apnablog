@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block title %} BlogPost {% endblock title %} {% block body %}
+<div class="container my-5"><br>
+    <h2 class="blog-post-title">{{post.title}}</h2>
+    <p class="blog-post-meta">Article by <a href="/about">{{post.author}}</a> posted on {{post.timeStamp}}<span>
+            {{post.views}} </span></p>
+
+    <img src="/media/{{post.image}}" class="card-img " alt="..."
+        style="height: 600px;width: 1000px;align-content: center; right: 5rem;">
+    <p>{{post.content}}</p>
+    <hr>
+
+</div>
+<div class="container">
+    <h2>Comment({{comments.count}})</h2>
+    {% if user.is_authenticated %}
+    <form action="/blog/postcomment" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleInputPassword1">Post Comment</label>
+            <input type="text" class="form-control" name="comment" placeholder="Enter comment here">
+        </div>
+        <input type="hidden" name="postSno" value="{{post.sno}}">
+        <!--<input type="hidden" name="parentSno" value="{{comment.sno}}">-->
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+    {% else %}
+    <p>Please login to enter a comment</p>
+    {% endif %} {% for comment in comments %}
+    <div class="row my-3">
+        <div class="col-md-1 my-2">
+            <img src="/static/user.png" class="rounded mx-auto d-block w-100 p-1 border border-dark" alt="user">
+        </div>
+        <div class="col-md-11 my-2"> <b> {{comment.user.username}} </b> <span
+                class="badge badge-secondary">{{comment.timestamp}}</span>
+            <div>{{comment.comment}}</div>
+            
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% endblock body %}
